@@ -8,6 +8,7 @@ import {Base_URL} from '../utils/constants'
 
 
 const Login = () => {
+  const [errorMessage, setErrorMessage] = useState("")
   const navigate = useNavigate()
   const [useEmail, setUseEmail] = useState("hiba@gmail.com")
   const [usePassword, setUsePassword] = useState("Hiba@1234")
@@ -26,7 +27,8 @@ const Login = () => {
       dispatch(addUser(response.data))
       navigate("/")
     } catch (err) {
-      console.log(err)
+      // console.log(err?.response?.data)
+      setErrorMessage(err?.response?.data || "Something went Wrong!")
     }
   }
   return (
@@ -53,7 +55,7 @@ const Login = () => {
           value={usePassword}
           onChange={((e) => { setUsePassword(e.target.value) })}
         />
-
+         <p className="mt-2 text-red-400">{errorMessage}</p>
         <button className="btn btn-neutral mt-4" onClick={handleClick}>Login</button>
       </fieldset>
     </div>
