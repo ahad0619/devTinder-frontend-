@@ -7,8 +7,7 @@ import Card from "./Card";
 
 const Feed = () => {
   const dispatch = useDispatch();
-  const feed = useSelector((store) => store.feed) || []
-  // console.log(feed)
+  const feedData = useSelector((store) => store.feed) || []
   const fetchData = async () => {
     try {
       const res = await axios.get(Base_URL + "feed", { withCredentials: true });
@@ -26,12 +25,12 @@ const Feed = () => {
 
   return (
     <>
-      {feed.length == 0 ? (
+      {feedData.length == 0 ? (
         <h1 className="flex justify-center mb-6 font-semibold text-2xl text-gray-400">
           Thats all for today! you have gone through all the users
         </h1>) : (
         <div>
-          <Card data={feed} />
+          <Card data={feedData[0]} />
         </div>
       )
       }

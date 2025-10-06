@@ -4,9 +4,9 @@ import { Base_URL, defaultPhoto } from '../utils/constants';
 import { useDispatch } from 'react-redux';
 import { removeFeed } from '../utils/feedSlice';
 const Card = ({ data, className = "" }) => {
-   
+    console.log(data)
     const dispatch = useDispatch()
-    const { firstName, gender, age, about, lastName, photoUrl, _id } = data[0] || ""
+    const { firstName, gender, age, about, lastName, photoUrl, _id } = data
 
     const fetchData = async (status, _id) => {
         const res = await axios.post(Base_URL + "request/" + status + "/" + _id, {}, { withCredentials: true })
