@@ -9,11 +9,11 @@ import RequestCard from "./RequestCard"
 const Requests = () => {
     const dispatch = useDispatch()
     const requests = useSelector((store) => store.requests) || []
-    console.log(requests)
+    // console.log(requests)
     const fetchRequests = async () => {
         try {
 
-            const res = await axios(Base_URL + "user/recieved", { withCredentials: true })
+            const res = await axios.get(Base_URL + "user/recieved", { withCredentials: true })
             console.log(res.data)
             dispatch(addRequest(res?.data?.connection))
         } catch (err) {
@@ -25,9 +25,13 @@ const Requests = () => {
     }, [])
     return (
         <>
+            {requests.length == 0 ? (
+                <h1 className="flex justify-center mb-6 font-semibold text-2xl text-gray-400">
+                    No pending requests!
+                </h1>) : (requests.map((request) => < RequestCard data={request} />))
+            }
 
-            {requests.map((request)=> < RequestCard  data={request} /> )}
-           
+
         </>
     )
 }
