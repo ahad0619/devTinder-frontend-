@@ -6,6 +6,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import appStore from './utils/appStore'
 import Feed from './components/Feed'
+import Requests from './components/Requests'
+import Connection from './components/Connection'
 
 function App() {
 
@@ -16,9 +18,11 @@ function App() {
         <BrowserRouter basename='/'>
           <Routes>
             <Route path='/' element={<Body />} >
-              <Route path= '/' element={<Feed />} />
+              <Route path='/' element={<Feed />} />
               <Route path='/login' element={<Login />} />
               <Route path='/profile' element={<Profile />} />
+              <Route path='/requests' element={<Requests />} />
+              <Route path='/connections' element={<Connection />} />
             </Route>
           </Routes>
         </BrowserRouter>

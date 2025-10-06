@@ -17,7 +17,7 @@ const Body = () => {
         const response = await axios.get(Base_URL + "profile", {
           withCredentials: true
         })
-        console.log(response)
+        // console.log(response)
         dispatch(addUser(response.data))
       }
     }

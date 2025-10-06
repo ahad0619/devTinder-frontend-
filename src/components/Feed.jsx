@@ -3,12 +3,12 @@ import { Base_URL } from "../utils/constants";
 import { addFeed } from "../utils/feedSlice";
 import { useEffect } from "react";
 import axios from "axios";
+import Card from "./Card";
 
 const Feed = () => {
   const dispatch = useDispatch();
-  const feed = useSelector((store)=> store.feed)
-
-
+  const feed = useSelector((store)=> store.feed) || []
+// console.log(feed)
   const fetchData = async () => {
     try {
       if(feed) return
@@ -26,7 +26,7 @@ const Feed = () => {
 
   return (
     <div>
-      Feed
+      <Card data={feed}/>
     </div>
   );
 };
