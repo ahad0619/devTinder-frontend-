@@ -4,7 +4,6 @@ import { Base_URL, defaultPhoto } from '../utils/constants';
 import { useDispatch } from 'react-redux';
 import { removeFeed } from '../utils/feedSlice';
 const Card = ({ data, className = "" }) => {
-    console.log(data)
     const dispatch = useDispatch()
     const { firstName, gender, age, about, lastName, photoUrl, _id } = data
 

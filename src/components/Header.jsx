@@ -26,7 +26,7 @@ const Header = () => {
     <div>
       <div className="navbar bg-base-400 shadow-lg">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl">devTinder</a>
+          <Link to="/" className="btn btn-ghost text-xl">devTinder</Link>
         </div>
         <div className="flex gap-2">
 
