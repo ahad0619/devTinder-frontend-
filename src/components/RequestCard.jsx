@@ -19,7 +19,7 @@ const RequestCard = ({ data }) => {
     return (
         <>
 
-            <h1 className="flex justify-center mb-6 font-semibold text-2xl text-gray-400">Pending Requests</h1>
+          
             <div className="flex justify-center pb-4 ">
                 <div className="card bg-neutral text-neutral-content w-96 flex items-center p-4 gap-4">
                     <div className="border w-18 h-18 flex  justify-center rounded-full overflow-hidden bg-gray-700">

@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom"
 
 
 const ConnectionCard = ({data}) => {
-    const {firstName , lastName , age , gender} = data
+    const {firstName , lastName , age , gender , _id} = data
+
     
     return (
         <div>
@@ -19,7 +21,9 @@ const ConnectionCard = ({data}) => {
                     <p>{age || ""} Years | {gender || ""}</p>
                 </div>
                 <div>
-                     <button className="btn btn-primary ml-30">Message</button>
+                    <Link to={`/chat/${_id}`}> 
+                    <button className="btn btn-primary ml-30">Message</button>
+                    </Link>
                 </div>
             </div>
 

@@ -30,6 +30,7 @@ const Login = () => {
       console.log("Login success");
       dispatch(addUser(response.data))
       navigate("/")
+     
     } catch (err) {
 
       setErrorMessage(err?.response?.data || "Something went Wrong!")
@@ -45,10 +46,12 @@ const Login = () => {
         password: usePassword
       },
       { withCredentials: true })
-    console.log("Sign up successful", res.data)
-    navigate("/")
-    dispatch(addUser(res.data))
+      dispatch(addUser(res.data))
+      navigate("/profile");
+    
   }
+
+ 
   return (
     <>
       <div className="ml-96 mt-20 pl-44">
@@ -61,7 +64,10 @@ const Login = () => {
               className="input"
               placeholder="First Name"
               value={firstName}
-              onChange={((e) => { setFirstName(e.target.value) })}
+              onChange={((e) => {
+                setFirstName(e.target.value)
+                setErrorMessage("")
+              })}
             />
           </>}
 
@@ -71,7 +77,10 @@ const Login = () => {
               className="input"
               placeholder="Last Name"
               value={lastName}
-              onChange={((e) => { setLastName(e.target.value) })}
+              onChange={((e) => {
+                setLastName(e.target.value)
+                setErrorMessage("")
+              })}
             /></>}
           <label className="label">Email</label>
           <input
@@ -79,7 +88,11 @@ const Login = () => {
             className="input"
             placeholder="Email"
             value={useEmail}
-            onChange={((e) => { setUseEmail(e.target.value) })}
+            onChange={((e) => {
+              setUseEmail(e.target.value)
+              setErrorMessage("")
+            })}
+
           />
 
           <label
@@ -90,7 +103,10 @@ const Login = () => {
             className="input"
             placeholder="Password"
             value={usePassword}
-            onChange={((e) => { setUsePassword(e.target.value) })}
+            onChange={((e) => {
+              setUsePassword(e.target.value)
+              setErrorMessage("")
+            })}
           />
           <p className="mt-2 text-red-400">{errorMessage}</p>
           {isLogin && <button className="btn btn-success mt-4" onClick={handleClick}>Login</button>}

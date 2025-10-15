@@ -25,14 +25,25 @@ const Requests = () => {
     }, [])
     return (
         <>
-            {requests.length == 0 ? (
+            {requests.length === 0 ? (
                 <h1 className="flex justify-center mb-6 font-semibold text-2xl text-gray-400">
                     No pending requests!
-                </h1>) : (requests.map((request) => < RequestCard data={request} />))
-            }
+                </h1>
+            ) : (
+                <>
+                    <h1 className="flex justify-center mb-6 font-semibold text-2xl text-gray-400">
+                        Pending Requests
+                    </h1>
 
-
+                    <div className="flex flex-wrap justify-center gap-6 pb-4">
+                        {requests.map((request) => (
+                            <RequestCard key={request._id} data={request} />
+                        ))}
+                    </div>
+                </>
+            )}
         </>
+
     )
 }
 
