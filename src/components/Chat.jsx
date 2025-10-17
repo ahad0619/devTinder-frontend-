@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom"
 import { createSocketConnection } from "../utils/socket"
 import { useSelector } from "react-redux"
 import EmojiPicker from 'emoji-picker-react';
+import { Base_URL } from "../utils/constants";
+import axios from 'axios'
 
 
 const Chat = () => {
@@ -12,6 +14,7 @@ const Chat = () => {
     const { id: targetUserId } = useParams();
     const [socket, setSocket] = useState(null);
     const user = useSelector((store) => store.user) || []
+
     useEffect(() => {
         if (!user) return;
 
@@ -24,27 +27,58 @@ const Chat = () => {
             targetUser: targetUserId
         });
 
-        newSocket.on("messageRecieved", ({ firstName, text }) => {
-            setNewMessage((prev) => [...prev, { firstName, text }]);
+        newSocket.on("messageRecieved", ({ firstName, lastName, text, createdAt }) => {
+            setNewMessage((prev) => [...prev,
+            {
+                firstName,
+                lastName: lastName || "",
+                text,
+                createdAt
+            }]);
         });
 
         return () => newSocket.disconnect();
     }, [user?._id, targetUserId]);
 
+
     const handleSendMessage = () => {
-        if (!socket) return
-        socket.emit("sendMessage", {
+        if (!socket || !message.trim()) return;
+
+        const newMsg = {
             firstName: user.firstName,
+            lastName: user.lastName || "",
             userId: user._id,
             targetUserId,
-            text: message
-        })
-        setMessage("")
+            text: message,
+            createdAt: new Date().toISOString()
+        };
 
+        socket.emit("sendMessage", newMsg);
+        setMessage("");
     }
+
     const handleEmojiClick = (emojiObject) => {
         setMessage(message + emojiObject.emoji);
     }
+
+    const fetchChat = async () => {
+        const chat = await axios.get(Base_URL + "chat/" + targetUserId,
+            { withCredentials: true })
+        console.log(chat.data.messages)
+        const chatMessages = chat?.data?.messages.map((msg) => {
+            const { senderId, text, createdAt } = msg
+            return {
+                firstName: senderId?.firstName,
+                lastName: senderId?.lastName,
+                text,
+                createdAt: createdAt ? new Date(createdAt).toISOString() : new Date().toISOString(),
+            }
+        })
+        setNewMessage(chatMessages)
+    }
+    useEffect(() => {
+        fetchChat()
+    }, [])
 
     return (
         <>
@@ -61,8 +95,10 @@ const Chat = () => {
                                 </div>
                             </div>
                             <div className="chat-header">
-                                {msg.firstName}
-                                <time className="text-xs opacity-50 ml-2">12:45</time>
+                                {msg.firstName + " " + msg.lastName}
+                                <time className="text-xs opacity-50 ml-2">
+                                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </time>
                             </div>
                             <div className="chat-bubble">{msg.text}</div>
                         </div>
@@ -71,7 +107,7 @@ const Chat = () => {
 
 
                 <form
-                    className="border-b border-l border-r w-1/4 border-gray-500 p-4 relative" // make form relative
+                    className="border-b border-l border-r w-1/4 border-gray-500 p-4 relative"
                     onSubmit={(e) => { e.preventDefault() }}
                 >
                     <div className="flex items-center">
@@ -82,7 +118,7 @@ const Chat = () => {
                             onChange={(e) => setMessage(e.target.value)}
                         />
 
-                     
+
                         <div className="relative">
                             <button
                                 type="button"
@@ -92,7 +128,7 @@ const Chat = () => {
                                 😊
                             </button>
 
-                           
+
                             {showPicker && (
                                 <div className="absolute bottom-full left-0 z-50">
                                     <EmojiPicker onEmojiClick={handleEmojiClick} />
