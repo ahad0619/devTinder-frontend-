@@ -24,7 +24,7 @@ const RequestCard = ({ data }) => {
                 <div className="card bg-neutral text-neutral-content w-96 flex items-center p-4 gap-4">
                     <div className="border w-18 h-18 flex  justify-center rounded-full overflow-hidden bg-gray-700">
                         <img
-                            src="https://img.freepik.com/premium-photo/beauty-woman-face-portrait-beautiful-spa-model-girl-with-perfect-fresh-clean-skin-generated-by-ai_911060-3271.jpg?w=2000"
+                            src={photoUrl}
                             alt="Profile picture"
                             className="object-cover w-full h-full"
                         />
@@ -33,7 +33,7 @@ const RequestCard = ({ data }) => {
                     <div className="card-body p-0 text-center items-center">
                         <div className=" gap-4">
                             <h2 className="card-title align-text-top">{firstName} {lastName} </h2>
-                            <p className="font-extralight">30 years | Female</p>
+                            <p className="font-extralight">{age} | {gender}</p>
                         </div>
                         <p>About</p>
                         <div className="card-actions justify-center">

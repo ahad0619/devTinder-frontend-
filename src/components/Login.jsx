@@ -5,8 +5,6 @@ import { addUser } from "../utils/userSlice"
 import { useNavigate } from "react-router-dom"
 import { Base_URL } from '../utils/constants'
 
-
-
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("")
   const navigate = useNavigate()
@@ -18,112 +16,114 @@ const Login = () => {
 
   const dispatch = useDispatch()
 
-  const handleClick = async () => {
+  const handleLogin = async () => {
     try {
       const response = await axios.post(Base_URL + "login", {
         emailId: useEmail,
         password: usePassword
-      }, {
-        withCredentials: true
-
-      })
-      console.log("Login success");
+      }, { withCredentials: true })
       dispatch(addUser(response.data))
       navigate("/")
-     
     } catch (err) {
-
-      setErrorMessage(err?.response?.data || "Something went Wrong!")
+      setErrorMessage(err?.response?.data || "Something went wrong!")
     }
   }
 
   const handleSignUp = async () => {
-    const res = await axios.post(Base_URL + "signup",
-      {
-        firstName: firstName,
-        lastName: lastName,
+    try {
+      const res = await axios.post(Base_URL + "signup", {
+        firstName,
+        lastName,
         emailId: useEmail,
         password: usePassword
-      },
-      { withCredentials: true })
+      }, { withCredentials: true })
       dispatch(addUser(res.data))
-      navigate("/profile");
-    
+      navigate("/profile")
+    } catch (err) {
+      setErrorMessage(err?.response?.data || "Something went wrong!")
+    }
   }
 
- 
+  const handleSubmit = (e) => {
+    e.preventDefault() 
+    if (isLogin) handleLogin()
+    else handleSignUp()
+  }
+
   return (
-    <>
-      <div className="ml-96 mt-20 pl-44">
-        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-          {isLogin && <legend className="fieldset-legend">Login</legend>}
-          {!isLogin && <legend className="fieldset-legend">Sign Up</legend>}
-          {!isLogin && <> <label className="label">First Name</label>
+    <div className="flex justify-center mt-20 px-4">
+      <form
+        className="fieldset bg-base-200 border-base-300 rounded-box w-full sm:w-96 border p-6"
+        onSubmit={handleSubmit}
+      >
+        <legend className="fieldset-legend text-xl font-bold mb-4">
+          {isLogin ? "Login" : "Sign Up"}
+        </legend>
+
+        {!isLogin && (
+          <>
+            <label className="label">First Name</label>
             <input
               type="text"
-              className="input"
+              className="input mb-2"
               placeholder="First Name"
               value={firstName}
-              onChange={((e) => {
-                setFirstName(e.target.value)
-                setErrorMessage("")
-              })}
+              onChange={(e) => { setFirstName(e.target.value); setErrorMessage("") }}
             />
-          </>}
 
-          {!isLogin && <> <label className="label">Last Name</label>
+            <label className="label">Last Name</label>
             <input
               type="text"
-              className="input"
+              className="input mb-2"
               placeholder="Last Name"
               value={lastName}
-              onChange={((e) => {
-                setLastName(e.target.value)
-                setErrorMessage("")
-              })}
-            /></>}
-          <label className="label">Email</label>
-          <input
-            type="email"
-            className="input"
-            placeholder="Email"
-            value={useEmail}
-            onChange={((e) => {
-              setUseEmail(e.target.value)
-              setErrorMessage("")
-            })}
+              onChange={(e) => { setLastName(e.target.value); setErrorMessage("") }}
+            />
+          </>
+        )}
 
-          />
+        <label className="label">Email</label>
+        <input
+          type="email"
+          className="input mb-2"
+          placeholder="Email"
+          value={useEmail}
+          onChange={(e) => { setUseEmail(e.target.value); setErrorMessage("") }}
+        />
 
-          <label
-            className="label">Password
-          </label>
-          <input
-            type="password"
-            className="input"
-            placeholder="Password"
-            value={usePassword}
-            onChange={((e) => {
-              setUsePassword(e.target.value)
-              setErrorMessage("")
-            })}
-          />
-          <p className="mt-2 text-red-400">{errorMessage}</p>
-          {isLogin && <button className="btn btn-success mt-4" onClick={handleClick}>Login</button>}
-          {isLogin && <div className="flex gap-1 mt-3">
-            <p>Not a user?</p>
-            <p className="cursor-pointer" onClick={() => { setIsLogin(!isLogin) }}>Sign Up</p>
-          </div>
-          }
-          {!isLogin && <button className="btn btn-warning mt-4" onClick={handleSignUp} >SignUp</button>}
-          {!isLogin && <div className="flex gap-1 mt-3">
-            <p>Already a user?</p>
-            <p className="cursor-pointer" onClick={() => { setIsLogin(!isLogin) }}>Sign in now</p>
-          </div>
-          }
-        </fieldset>
-      </div>
-    </>
+        <label className="label">Password</label>
+        <input
+          type="password"
+          className="input mb-2"
+          placeholder="Password"
+          value={usePassword}
+          onChange={(e) => { setUsePassword(e.target.value); setErrorMessage("") }}
+        />
+
+        {errorMessage && <p className="mt-2 text-red-400">{errorMessage}</p>}
+
+        <button
+          type="submit"
+          className={`mt-4 btn ${isLogin ? "btn-success" : "btn-warning"} w-full`}
+        >
+          {isLogin ? "Login" : "Sign Up"}
+        </button>
+
+        <div className="flex justify-center gap-1 mt-3 text-sm">
+          {isLogin ? (
+            <>
+              <p>Not a user?</p>
+              <p className="cursor-pointer text-blue-500" onClick={() => setIsLogin(false)}>Sign Up</p>
+            </>
+          ) : (
+            <>
+              <p>Already a user?</p>
+              <p className="cursor-pointer text-blue-500" onClick={() => setIsLogin(true)}>Sign in now</p>
+            </>
+          )}
+        </div>
+      </form>
+    </div>
   )
 }
 
