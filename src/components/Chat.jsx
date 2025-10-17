@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import { createSocketConnection } from "../utils/socket"
 import { useSelector } from "react-redux"
@@ -14,6 +14,7 @@ const Chat = () => {
     const { id: targetUserId } = useParams();
     const [socket, setSocket] = useState(null);
     const user = useSelector((store) => store.user) || []
+    const chatContainerRef = useRef(null);
 
     useEffect(() => {
         if (!user) return;
@@ -80,44 +81,90 @@ const Chat = () => {
         fetchChat()
     }, [])
 
+    useEffect(() => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTo({
+                top: chatContainerRef.current.scrollHeight,
+                behavior: "smooth",
+            });
+        }
+    }, [newMessage]);
+
     return (
         <>
-            <div className="flex flex-col items-center justify-center mt-20 h-3/4 ">
-                <div className="w-1/4 border-t border-l border-r border-gray-500 p-4 rounded-t-2xl  h-96 overflow-y-auto">
+            <div className="flex flex-col items-center justify-center mt-10 h-[80vh] px-3 sm:px-6">
+
+                {/* Chat Header */}
+                <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/3 bg-gray-800 text-white rounded-t-2xl border border-gray-500 p-4 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <img
+                            src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
+                            alt="User Avatar"
+                            className="w-10 h-10 rounded-full"
+                        />
+                        <div>
+                            <h2 className="text-lg font-semibold">
+                                {(() => {
+                                    const targetUser = newMessage.find(
+                                        (msg) => msg.firstName !== user.firstName
+                                    );
+                                    return targetUser
+                                        ? `${targetUser.firstName} ${targetUser.lastName || ""}`
+                                        : "Chat";
+                                })()}
+                            </h2>
+                            <p className="text-xs text-gray-400">Online</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Chat Messages */}
+                <div
+                    ref={chatContainerRef}
+                    className="w-full sm:w-3/4 md:w-2/3 lg:w-1/3 border-t border-l border-r border-gray-500 p-4 h-[65vh] overflow-y-auto bg-gray-900"
+                >
                     {newMessage.map((msg, index) => (
-                        <div key={index} className={`chat ${msg.firstName === user.firstName ? 'chat-end' : 'chat-start'}`}>
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Avatar"
-                                        src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
-                                    />
+                        <div
+                            key={index}
+                            className={`flex flex-col mb-3 ${msg.firstName === user.firstName ? "items-end" : "items-start"
+                                }`}
+                        >
+                            <div
+                                className={`max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg px-4 py-2 rounded-2xl text-white ${msg.firstName === user.firstName
+                                        ? "bg-blue-600 rounded-br-none"
+                                        : "bg-gray-700 rounded-bl-none"
+                                    }`}
+                            >
+                                <div className="text-sm font-semibold mb-1">
+                                  
                                 </div>
+                                <div className="text-sm">{msg.text}</div>
                             </div>
-                            <div className="chat-header">
-                                {msg.firstName + " " + msg.lastName}
-                                <time className="text-xs opacity-50 ml-2">
-                                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                </time>
+                            
+                            <div className="text-xs opacity-60 mt-1">
+                                {new Date(msg.createdAt).toLocaleTimeString([], {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                })}
                             </div>
-                            <div className="chat-bubble">{msg.text}</div>
                         </div>
                     ))}
                 </div>
 
-
+                {/*Message Input */}
                 <form
-                    className="border-b border-l border-r w-1/4 border-gray-500 p-4 relative"
-                    onSubmit={(e) => { e.preventDefault() }}
+                    className="border-b border-l border-r w-full sm:w-3/4 md:w-2/3 lg:w-1/3 border-gray-500 p-4 relative bg-gray-900 rounded-b-2xl"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                    }}
                 >
                     <div className="flex items-center">
                         <input
                             value={message}
                             type="text"
-                            className="w-3/4 border bg-gray-800 border-gray-500 h-10 p-2 mr-3 rounded-2xl"
+                            className="w-full sm:w-3/4 border bg-gray-800 border-gray-500 h-10 p-2 mr-3 rounded-2xl text-white focus:outline-none"
                             onChange={(e) => setMessage(e.target.value)}
                         />
-
 
                         <div className="relative">
                             <button
@@ -127,7 +174,6 @@ const Chat = () => {
                             >
                                 😊
                             </button>
-
 
                             {showPicker && (
                                 <div className="absolute bottom-full left-0 z-50">
@@ -145,10 +191,10 @@ const Chat = () => {
                         </button>
                     </div>
                 </form>
-
             </div>
         </>
-    )
+    );
+
 }
 
 export default Chat
