@@ -10,7 +10,7 @@ const RequestCard = ({ data }) => {
     const dispatch = useDispatch()
     const reviewRequest = async (status, id) => {
         try {
-            const res = await axios.post(Base_URL + "request/review/" + status + "/" + id, {}, { withCredentials: true })
+            const res = await axios.post(Base_URL + "/request/review/" + status + "/" + id, {}, { withCredentials: true })
             dispatch(removeRequest(id))
         } catch (err) {
             console.log(err)

@@ -9,7 +9,7 @@ const Card = ({ data, className = "" }) => {
 
   const fetchData = async (status, _id) => {
     try {
-      await axios.post(`${Base_URL}request/${status}/${_id}`, {}, { withCredentials: true });
+      await axios.post(`${Base_URL}/request/${status}/${_id}`, {}, { withCredentials: true });
       dispatch(removeFeed(_id));
     } catch (err) {
       console.log(err);

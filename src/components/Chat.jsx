@@ -63,7 +63,7 @@ const Chat = () => {
     }
 
     const fetchChat = async () => {
-        const chat = await axios.get(Base_URL + "chat/" + targetUserId,
+        const chat = await axios.get(Base_URL + "/chat/" + targetUserId,
             { withCredentials: true })
         console.log(chat.data.messages)
         const chatMessages = chat?.data?.messages.map((msg) => {

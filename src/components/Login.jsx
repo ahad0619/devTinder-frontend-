@@ -18,7 +18,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(Base_URL + "login", {
+      const response = await axios.post(Base_URL + "/login", {
         emailId: useEmail,
         password: usePassword
       }, { withCredentials: true })
@@ -31,7 +31,7 @@ const Login = () => {
 
   const handleSignUp = async () => {
     try {
-      const res = await axios.post(Base_URL + "signup", {
+      const res = await axios.post(Base_URL + "/signup", {
         firstName,
         lastName,
         emailId: useEmail,

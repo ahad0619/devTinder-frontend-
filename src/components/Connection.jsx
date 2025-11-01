@@ -12,7 +12,7 @@ const Connection = () => {
 
     const connections = async () => {
         try {
-            const res = await axios.get(Base_URL + "user/connections", { withCredentials: true });
+            const res = await axios.get(Base_URL + "/user/connections", { withCredentials: true });
             dispatch(addConnection(res.data));
         } catch (err) {
             console.log(err.message);
